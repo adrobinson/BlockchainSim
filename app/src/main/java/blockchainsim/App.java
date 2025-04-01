@@ -8,7 +8,22 @@ import java.security.NoSuchAlgorithmException;
 public class App {
 
     public static void main(String[] args) {
-        
+        Block block = new Block(0, "None", "Adam");
+        Block block2 = new Block(0, block.getHash(), "asdsadadas");
+        block2.setNonce(1);
+        Miner miner = new Miner();
+        System.out.println(
+                "Data : " + block.getData() + "\nHash : " + block.getHash()
+        );
+
+
+        miner.mineBlock(block, 4);
+        System.out.println(
+               "New Hash : " + block.getHash()
+        );
+
     }
+
+
 
 }

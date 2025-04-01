@@ -25,7 +25,7 @@ public class Block {
     }
 
     public void setNonce(int nonce) {this.nonce = nonce;}
-
+    public void setHash(String hash) {this.hash = hash;}
     public void setPreviousHash(String previousHash) {this.previousHash = previousHash;}
 
     public int getIndex() {return index;}
