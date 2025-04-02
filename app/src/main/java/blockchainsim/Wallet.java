@@ -1,28 +1,31 @@
 package blockchainsim;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.*;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Base64;
 
 public class Wallet {
     private KeyPairGenerator kpg;
     private PrivateKey privateKey;
     private PublicKey publicKey;
-    private String publicAddress;
+    private ArrayList<Transaction> transactionHistory;
 
     public Wallet() {
 
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
-            KeyPair pair = kpg.generateKeyPair();
-            privateKey = pair.getPrivate();
-            publicKey = pair.getPublic();
+            Security.addProvider(new BouncyCastleProvider());
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("ECDSA", "BC");
+            kpg.initialize(256, new SecureRandom());
+            KeyPair keyPair = kpg.generateKeyPair();
+            this.privateKey = keyPair.getPrivate();
+            this.publicKey = keyPair.getPublic();
             System.out.println("Keys generated");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        } catch (NoSuchProviderException e) {
+            throw new RuntimeException(e);
         }
-
-        this.publicAddress = UUID.randomUUID().toString();
-        publicAddress = publicAddress.replace("-", "");
     }
 
     protected Key getPublicKey(){
@@ -31,9 +34,18 @@ public class Wallet {
         }
         return null;
     }
-    protected String getPublicAddress(){
-        return publicAddress;
+
+    protected PrivateKey getPrivateKey() {
+        if (privateKey != null){
+            return privateKey;
+        }
+        return null;
     }
+
+    protected String getPublicAddress(){
+        return Base64.getEncoder().encodeToString(publicKey.getEncoded());
+    }
+
 
 
 }
