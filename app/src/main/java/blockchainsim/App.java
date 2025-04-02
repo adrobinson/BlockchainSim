@@ -4,23 +4,42 @@
 package blockchainsim;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 
 public class App {
 
-    public static void main(String[] args) {
-        Block block = new Block(0, "None", "Adam");
-        Block block2 = new Block(0, block.getHash(), "asdsadadas");
+    public static void main(String[] args) throws Exception {
+        Block block = new Block(0, "None");
+        Block block2 = new Block(0, block.getHash());
         block2.setNonce(1);
         Miner miner = new Miner();
         System.out.println(
                 "Data : " + block.getData() + "\nHash : " + block.getHash()
         );
 
+        Blockchain currency = new Blockchain(5);
 
-        miner.mineBlock(block, 4);
-        System.out.println(
-               "New Hash : " + block.getHash()
-        );
+        Wallet Bob = new Wallet();
+        Wallet Alice = new Wallet();
+
+        currency.getUtxo_pool().put(Bob.getPublicAddress(), 15.0);
+        System.out.println("Current Balances: " + currency.getUtxo_pool());
+
+        System.out.println("Attempting transaction Bob -> Alice (10)");
+        Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
+        tx1.signTransaction(Bob.getPrivateKey());
+
+        System.out.println("Adding to block");
+        block.addTransaction(tx1);
+
+        System.out.println("Current Balances: " + currency.getUtxo_pool());
+
+        System.out.println("Data: " + block.getData());
+
+
+
+
+
 
     }
 

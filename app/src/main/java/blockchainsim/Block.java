@@ -10,10 +10,9 @@ public class Block {
     private int nonce;
     private String hash;
 
-    public Block(int index, String previousHash, String data) {
+    public Block(int index, String previousHash) {
         this.index = index;
         this.previousHash = previousHash;
-        this.data = data;
         this.timestamp = LocalDateTime.now();
         this.nonce = 0;
         this.hash = calculateHash();
@@ -22,6 +21,28 @@ public class Block {
     public String calculateHash() {
         String input = index + timestamp.toString() + previousHash + data + nonce;
         return Encryptor.encryptString(input);
+    }
+
+    public boolean addTransaction(Transaction tx) throws Exception{
+        if (!tx.verifySignature()) {
+            System.out.println("Invalid Transaction, signature not verified");
+            return false;
+        }
+
+        String sender = tx.getSender();
+        String receiver = tx.getReceiver();
+        double senderAmount = tx.getBlockchain().getUtxo_pool().getOrDefault(sender, 0.0); // Find amount that sender has already
+
+        if (senderAmount < tx.getAmount()) {
+            System.out.println("Cannot make transaction, insufficient funds.");
+            return false;
+        }
+
+        tx.getBlockchain().getUtxo_pool().put(sender, senderAmount - tx.getAmount()); // update the sender and receiver's amounts in the utxo pool
+        tx.getBlockchain().getUtxo_pool().put(receiver, tx.getBlockchain().getUtxo_pool().getOrDefault(receiver, 0.0) + tx.getAmount());
+
+        this.data += (tx);
+        return true;
     }
 
     public void setNonce(int nonce) {this.nonce = nonce;}
