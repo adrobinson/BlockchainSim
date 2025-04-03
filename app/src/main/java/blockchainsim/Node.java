@@ -11,7 +11,7 @@ public class Node {
         this.blockchain = blockchain;
     }
 
-    protected boolean verifyTransaction(Transaction tx) throws Exception {
+    public boolean verifyTransaction(Transaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return
             System.out.println("Invalid Transaction, signature not verified");
             return false;
@@ -26,6 +26,14 @@ public class Node {
         }
 
         return true;
+    }
+
+    public void storeTransaction(Transaction tx){
+        mempool.add(tx); // transaction will be verified by other nodes before adding to mempool
+    }
+
+    public ArrayList<Transaction> getMempool() {
+        return mempool;
     }
 
     public Blockchain getBlockchain() {

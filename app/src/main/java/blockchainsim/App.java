@@ -5,41 +5,62 @@ package blockchainsim;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
         Block block = new Block(0, "None");
         Block block2 = new Block(0, block.getHash());
+
+        Blockchain currency = new Blockchain(5);
+        Blockchain currency2 = new Blockchain(6);
+
+        Wallet Bob = new Wallet();
+        Wallet Alice = new Wallet();
+
+        PeerNetwork peerNetwork = new PeerNetwork();
+
+        Node node1 = new Node(currency);
+        peerNetwork.addNode(node1);
+        Node node2 = new Node(currency);
+        peerNetwork.addNode(node2);
+        Node node3 = new Node(currency);
+        peerNetwork.addNode(node3);
+        Node node4 = new Node(currency);
+        peerNetwork.addNode(node4);
+
         block2.setNonce(1);
         Miner miner = new Miner();
         System.out.println(
                 "Data : " + block.getData() + "\nHash : " + block.getHash()
         );
 
-        Blockchain currency = new Blockchain(5);
 
-        Wallet Bob = new Wallet();
-        Wallet Alice = new Wallet();
 
-        currency.getUtxo_pool().put(Bob.getPublicAddress(), 15.0);
+        currency.getUtxo_pool().put(Bob.getPublicAddress(), 15.0); // Give initial funds
         System.out.println("Current Balances: " + currency.getUtxo_pool());
+
 
         System.out.println("Attempting transaction Bob -> Alice (10)");
         Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
         tx1.signTransaction(Bob.getPrivateKey());
 
+
+        if (node1.verifyTransaction(tx1)){
+            if(peerNetwork.broadcastTransaction(node1 ,tx1)){
+                System.out.println("Transaction validated and stored in mempool");
+            }
+        }
+
         System.out.println("Adding to block");
         block.addTransaction(tx1);
 
-        System.out.println("Current Balances: " + currency.getUtxo_pool());
+        for(Node node: peerNetwork.getNodeList()){
+            System.out.println(node + "Transactions stored: " + node.getMempool());
+        }
 
-        System.out.println("Data: " + block.getData());
-
-
-
-
-
+        System.out.println("Block Data: " + block.getData());
 
     }
 

@@ -2,14 +2,12 @@ package blockchainsim;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.*;
-import java.util.ArrayList;
 import java.util.Base64;
 
 public class Wallet {
     private KeyPairGenerator kpg;
     private PrivateKey privateKey;
     private PublicKey publicKey;
-    private ArrayList<Transaction> transactionHistory;
 
     public Wallet() {
 
@@ -17,13 +15,13 @@ public class Wallet {
             Security.addProvider(new BouncyCastleProvider());
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("ECDSA", "BC");
             kpg.initialize(256, new SecureRandom());
-            KeyPair keyPair = kpg.generateKeyPair();
+
+            KeyPair keyPair = kpg.generateKeyPair(); // Generate public/private keys
             this.privateKey = keyPair.getPrivate();
             this.publicKey = keyPair.getPublic();
             System.out.println("Keys generated");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchProviderException e) {
+
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new RuntimeException(e);
         }
     }
