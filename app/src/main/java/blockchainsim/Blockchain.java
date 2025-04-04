@@ -14,7 +14,6 @@ public class Blockchain extends LinkedList<Block> {
     }
 
     public boolean add(Block block){
-        // when a block is to be added to the blockchain, it will first be checked by the consensus class
         return false;
     }
 

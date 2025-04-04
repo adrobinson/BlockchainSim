@@ -1,9 +1,6 @@
 package blockchainsim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Node {
 
@@ -53,7 +50,6 @@ public class Node {
                     }
 
                     pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // The recipient to be added to the UTXO pool
-                    storeTransaction(tx);
                     return true;
                 }
             }
@@ -76,25 +72,26 @@ public class Node {
         mempool.remove(tx);
     }
 
-    public void removePendingUTXOs(String transactionID){
-        for(UTXO utxo: pendingUTXOs.keySet()){
-            if (Objects.equals(utxo.getTransactionID(), transactionID)){
-                pendingUTXOs.remove(utxo);
-            }
-
-        }
+    public void removePendingUTXO(UTXO utxoToRemove){
+        pendingUTXOs.remove(utxoToRemove);
     }
 
     // If a transaction is found to be invalid by majority nodes, nodes that falsely validated it will run this method
     public void clearInvalidTransaction(Transaction tx){
+        List<UTXO> toRemove = new ArrayList<>();
         for(UTXO utxo: pendingUTXOs.keySet()){
-            for(String transactionID: tempResultIDs){
-                if (Objects.equals(utxo.getTransactionID(), tx.getTransactionID())  ||  Objects.equals(utxo.getTransactionID(), transactionID)){
-                    pendingUTXOs.remove(utxo);
+                if (Objects.equals(utxo.getTransactionID(), tx.getTransactionID()) || tempResultIDs.contains(utxo.getTransactionID())){
+                    toRemove.add(utxo);
                 }
-            }
-
         }
+
+        if(toRemove != null){
+            for(UTXO utxo: toRemove){
+                removePendingUTXO(utxo);
+            }
+        }
+
+
     }
 
     public void setTransactionAccepted(boolean accepted){
