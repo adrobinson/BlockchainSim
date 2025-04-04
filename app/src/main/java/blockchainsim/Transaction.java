@@ -2,6 +2,7 @@ package blockchainsim;
 
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -11,12 +12,16 @@ public class Transaction {
     private double amount;
     private byte[] signature;
     private Blockchain blockchain;
+    private long timestamp;
+    private String transactionID;
 
     public Transaction(PublicKey sender, PublicKey receiver, Blockchain blockchain, double amount){
         this.sender = Base64.getEncoder().encodeToString(sender.getEncoded());
         this.receiver = Base64.getEncoder().encodeToString(receiver.getEncoded());
         this.amount = amount;
         this.blockchain = blockchain;
+        this.timestamp = System.currentTimeMillis();
+        this.transactionID = TransactionUtil.generateID(this.sender, this.receiver, this.amount, this.timestamp);
     }
 
     public void signTransaction(PrivateKey privateKey) throws Exception{
@@ -44,6 +49,7 @@ public class Transaction {
     public String getSender() {return sender;}
     public String getReceiver() {return receiver;}
     public double getAmount() {return amount;}
+    public String getTransactionID() {return transactionID;}
 
     public Blockchain getBlockchain() {return blockchain;}
 }
