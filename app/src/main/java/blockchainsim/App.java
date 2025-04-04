@@ -3,9 +3,7 @@
  */
 package blockchainsim;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class App {
@@ -31,33 +29,36 @@ public class App {
         Node node4 = new Node(currency);
         peerNetwork.addNode(node4);
 
-        block2.setNonce(1);
         Miner miner = new Miner();
-        System.out.println(
-                "Data : " + block.getData() + "\nHash : " + block.getHash()
-        );
-
 
 
         currency.getUtxo_pool().put("abcd1234", new UTXO("hashhash", 0, Bob.getPublicAddress(), 5.0));
         currency.getUtxo_pool().put("hjfdu6236", new UTXO("asdhask", 1, Bob.getPublicAddress(), 7.50));
-        System.out.println("Current Balances: " + currency.getUtxo_pool());
+
+        for(UTXO value: currency.getUtxo_pool().values()){
+            System.out.println("Wallet Address: " + value.getAddress() + " Balance: " + value.getAmount());
+        }
+
 
 
         System.out.println("Attempting transaction Bob -> Alice (10)");
         Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
         tx1.signTransaction(Bob.getPrivateKey());
 
-
         if (node1.verifyTransaction(tx1)){
-            if(peerNetwork.broadcastTransaction(node1 ,tx1)){
+            if(peerNetwork.broadcastTransaction(node1 ,tx1) == 2){
                 System.out.println("Transaction validated and stored in mempool");
+            } else if(peerNetwork.broadcastTransaction(node1 ,tx1) == 1) {
+                System.out.println("Majority of nodes found this transaction to be invalid! ");
+                peerNetwork.rectifyTransaction(tx1);
+            } else {
+                System.out.println("All nodes found this transaction to be invalid!");
             }
         }
 
         System.out.println("Pending UTXO's: ");
         for(Map.Entry<UTXO, Character> entry: node1.getPendingUTXOs().entrySet()){
-            System.out.println("Address: " + entry.getKey().getRecipientAddress() + " Amount: " + entry.getKey().getAmount() + " Add/Remove: " + entry.getValue());
+            System.out.println("Address: " + entry.getKey().getAddress() + " Amount: " + entry.getKey().getAmount() + " Add/Remove: " + entry.getValue() + " " + entry.getKey().getTransactionID());
         }
 
         System.out.println("Adding to block");

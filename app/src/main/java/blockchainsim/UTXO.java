@@ -20,7 +20,7 @@ public class UTXO {
         return transactionID;
     }
 
-    public String getRecipientAddress() {
+    public String getAddress() {
         return recipientAddress;
     }
 

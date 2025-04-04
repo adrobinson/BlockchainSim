@@ -1,12 +1,12 @@
 package blockchainsim;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Blockchain extends LinkedList<Block> {
     int difficulty;
     Block genesisBlock;
-    HashMap<String, UTXO> utxo_pool = new HashMap<>();
+    LinkedHashMap<String, UTXO> utxo_pool = new LinkedHashMap<>();
 
 
     public Blockchain(int difficulty) {
@@ -30,5 +30,5 @@ public class Blockchain extends LinkedList<Block> {
         utxo_pool.remove(utxoID);
     }
 
-    public HashMap<String, UTXO> getUtxo_pool() {return utxo_pool;}
+    public LinkedHashMap<String, UTXO> getUtxo_pool() {return utxo_pool;}
 }
