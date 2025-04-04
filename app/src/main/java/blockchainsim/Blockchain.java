@@ -6,7 +6,8 @@ import java.util.LinkedList;
 public class Blockchain extends LinkedList<Block> {
     int difficulty;
     Block genesisBlock;
-    HashMap<String, Double> utxo_pool = new HashMap<>();
+    HashMap<String, UTXO> utxo_pool = new HashMap<>();
+
 
     public Blockchain(int difficulty) {
         this.difficulty = difficulty;
@@ -21,5 +22,13 @@ public class Blockchain extends LinkedList<Block> {
         return difficulty;
     }
 
-    public HashMap<String, Double> getUtxo_pool() {return utxo_pool;}
+    public void addUtxo(String utxoID, UTXO utxo){
+        utxo_pool.put(utxoID, utxo);
+    }
+
+    public void removeUtxo(String utxoID){
+        utxo_pool.remove(utxoID);
+    }
+
+    public HashMap<String, UTXO> getUtxo_pool() {return utxo_pool;}
 }
