@@ -11,7 +11,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         Block block = new Block(0, "None");
 
-        Blockchain currency = new Blockchain(5);
+        Blockchain currency = Blockchain.getInstance();
 
         Wallet Bob = new Wallet();
         Wallet Alice = new Wallet();
@@ -27,7 +27,7 @@ public class App {
         Node node4 = new Node(currency);
         peerNetwork.addNode(node4);
 
-        Miner miner = new Miner();
+        Miner miner = new Miner(currency);
 
 
         currency.getUtxo_pool().put("abcd1234", new UTXO("hashhash", 0, Bob.getPublicAddress(), 5.0));
@@ -36,8 +36,6 @@ public class App {
         for(UTXO value: currency.getUtxo_pool().values()){
             System.out.println("Wallet Address: " + value.getAddress() + " Balance: " + value.getAmount());
         }
-
-
 
         System.out.println("Attempting transaction Bob -> Alice (10)");
         Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);

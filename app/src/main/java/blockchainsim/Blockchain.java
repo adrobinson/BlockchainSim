@@ -4,13 +4,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Blockchain extends LinkedList<Block> {
-    int difficulty;
-    Block genesisBlock;
-    LinkedHashMap<String, UTXO> utxo_pool = new LinkedHashMap<>();
+    private int difficulty;
+    private Block genesisBlock;
+    private static Blockchain blockchain = new Blockchain();
+    private LinkedHashMap<String, UTXO> utxo_pool = new LinkedHashMap<>();
 
-
-    public Blockchain(int difficulty) {
-        this.difficulty = difficulty;
+    private Blockchain(){}
+    public static Blockchain getInstance() {
+        return blockchain;
     }
 
     public boolean add(Block block){

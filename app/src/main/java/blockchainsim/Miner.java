@@ -1,6 +1,10 @@
 package blockchainsim;
 
-public class Miner {
+public class Miner extends Node{
+
+    public Miner(Blockchain blockchain) {
+        super(blockchain);
+    }
 
     public void mineBlock(Block targetBlock, int difficulty) {
         String target = "0".repeat(difficulty);
