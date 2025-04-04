@@ -9,11 +9,9 @@ import java.util.Map;
 public class App {
 
     public static void main(String[] args) throws Exception {
-        Block block = new Block(0, "None");
-        Block block2 = new Block(0, block.getHash());
+
 
         Blockchain currency = new Blockchain(5);
-        Blockchain currency2 = new Blockchain(6);
 
         Wallet Bob = new Wallet();
         Wallet Alice = new Wallet();
@@ -27,7 +25,14 @@ public class App {
         Node node3 = new Node(currency);
         peerNetwork.addNode(node3);
         Node node4 = new Node(currency);
-        peerNetwork.addNode(node4);
+        FaultyNode node5 = new FaultyNode(currency);
+        FaultyNode node6 = new FaultyNode(currency);
+        FaultyNode node7 = new FaultyNode(currency);
+        FaultyNode node8 = new FaultyNode(currency);
+        peerNetwork.addNode(node5);
+        peerNetwork.addNode(node6);
+        peerNetwork.addNode(node7);
+        peerNetwork.addNode(node8);
 
         Miner miner = new Miner();
 
@@ -45,10 +50,13 @@ public class App {
         Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
         tx1.signTransaction(Bob.getPrivateKey());
 
+
+
         if (node1.verifyTransaction(tx1)){
-            if(peerNetwork.broadcastTransaction(node1 ,tx1) == 2){
+            int consensus = peerNetwork.broadcastTransaction(node1 ,tx1);
+            if(consensus == 2){
                 System.out.println("Transaction validated and stored in mempool");
-            } else if(peerNetwork.broadcastTransaction(node1 ,tx1) == 1) {
+            } else if(consensus == 1) {
                 System.out.println("Majority of nodes found this transaction to be invalid! ");
                 peerNetwork.rectifyTransaction(tx1);
             } else {
@@ -61,14 +69,14 @@ public class App {
             System.out.println("Address: " + entry.getKey().getAddress() + " Amount: " + entry.getKey().getAmount() + " Add/Remove: " + entry.getValue() + " " + entry.getKey().getTransactionID());
         }
 
-        System.out.println("Adding to block");
-        block.addTransaction(tx1);
-
         for(Node node: peerNetwork.getNodeList()){
             System.out.println(node + "Transactions stored: " + node.getMempool());
+            System.out.println("Pending UTXOs: " + node.getPendingUTXOs());
         }
 
-        System.out.println("Block Data: " + block.getData());
+
+
+
 
     }
 
