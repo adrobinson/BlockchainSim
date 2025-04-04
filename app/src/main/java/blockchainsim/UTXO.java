@@ -2,10 +2,10 @@ package blockchainsim;
 
 public class UTXO {
     private String transactionID;
-    private int outputIndex;
+    private double outputIndex;
     private String recipientAddress;
     private double amount;
-    public UTXO(String transactionID, int outputIndex, String recipientAddress, int amount) {
+    public UTXO(String transactionID, int outputIndex, String recipientAddress, double amount) {
         this.transactionID = transactionID;
         this.outputIndex = outputIndex;
         this.recipientAddress = recipientAddress;
@@ -24,7 +24,7 @@ public class UTXO {
         return recipientAddress;
     }
 
-    public int getOutputIndex() {
+    public double getOutputIndex() {
         return outputIndex;
     }
 }

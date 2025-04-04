@@ -21,8 +21,10 @@ public class PeerNetwork {
 
         for(Node node: nodeList) {
             if(node.getBlockchain() == originNode.getBlockchain()){ // Check nodes are a part of the same blockchain
-                if (!node.verifyTransaction(tx)){
-                    return false;
+                if (node != originNode){
+                    if (!node.verifyTransaction(tx)){
+                        return false;
+                    }
                 }
             }
         }

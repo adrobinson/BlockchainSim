@@ -6,6 +6,7 @@ package blockchainsim;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class App {
 
@@ -38,7 +39,8 @@ public class App {
 
 
 
-        currency.getUtxo_pool().put(Bob.getPublicAddress(), 15.0); // Give initial funds
+        currency.getUtxo_pool().put("abcd1234", new UTXO("hashhash", 0, Bob.getPublicAddress(), 5.0));
+        currency.getUtxo_pool().put("hjfdu6236", new UTXO("asdhask", 1, Bob.getPublicAddress(), 7.50));
         System.out.println("Current Balances: " + currency.getUtxo_pool());
 
 
@@ -51,6 +53,11 @@ public class App {
             if(peerNetwork.broadcastTransaction(node1 ,tx1)){
                 System.out.println("Transaction validated and stored in mempool");
             }
+        }
+
+        System.out.println("Pending UTXO's: ");
+        for(Map.Entry<UTXO, Character> entry: node1.getPendingUTXOs().entrySet()){
+            System.out.println("Address: " + entry.getKey().getRecipientAddress() + " Amount: " + entry.getKey().getAmount() + " Add/Remove: " + entry.getValue());
         }
 
         System.out.println("Adding to block");
