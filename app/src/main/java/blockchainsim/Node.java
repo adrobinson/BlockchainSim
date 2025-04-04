@@ -85,7 +85,7 @@ public class Node {
                 }
         }
 
-        if(toRemove != null){
+        if(toRemove.getFirst() != null){
             for(UTXO utxo: toRemove){
                 removePendingUTXO(utxo);
             }

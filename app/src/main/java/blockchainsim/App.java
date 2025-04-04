@@ -10,10 +10,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         Block block = new Block(0, "None");
-        Block block2 = new Block(0, block.getHash());
 
         Blockchain currency = new Blockchain(5);
-        Blockchain currency2 = new Blockchain(6);
 
         Wallet Bob = new Wallet();
         Wallet Alice = new Wallet();
@@ -44,6 +42,7 @@ public class App {
         System.out.println("Attempting transaction Bob -> Alice (10)");
         Transaction tx1 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
         tx1.signTransaction(Bob.getPrivateKey());
+        Transaction tx2 = new Transaction((PublicKey) Bob.getPublicKey(), (PublicKey) Alice.getPublicKey(), currency, 10);
 
         if (node1.verifyTransaction(tx1)){
             if(peerNetwork.broadcastTransaction(node1 ,tx1) == 2){
@@ -62,10 +61,16 @@ public class App {
         }
 
         System.out.println("Adding to block");
+        System.out.println("Block Hash: " + block.getHash());
         block.addTransaction(tx1);
+        System.out.println("Block Hash: " + block.getHash());
+        block.addTransaction(tx2);
+        System.out.println("Block Hash: " + block.getHash());
+
 
         for(Node node: peerNetwork.getNodeList()){
             System.out.println(node + "Transactions stored: " + node.getMempool());
+            System.out.println("Pending UTXOs: " + node.getPendingUTXOs());
         }
 
         System.out.println("Block Data: " + block.getData());

@@ -49,7 +49,7 @@ public class PeerNetwork {
 
     public void rectifyTransaction(Transaction tx){
         for(Node node: nodeList){
-            if(node.isTransactionAccepted()){
+            if(node.isTransactionAccepted()){ // If node rejected transaction, do not run the clear function
                 node.clearInvalidTransaction(tx);
             }
         }

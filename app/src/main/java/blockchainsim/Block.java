@@ -1,12 +1,14 @@
 package blockchainsim;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Block {
     private int index;
     private LocalDateTime timestamp;
     private String previousHash;
-    private String data;
+    private ArrayList<Transaction> data = new ArrayList<>();
+    private int dataLimit = 5;
     private int nonce;
     private String hash;
 
@@ -20,11 +22,17 @@ public class Block {
 
     public String calculateHash() {
         String input = index + timestamp.toString() + previousHash + data + nonce;
-        return Encryptor.encryptString(input);
+
+        System.out.println("input" + input);
+        return Encryptor.encryptString(String.valueOf(input));
     }
 
-    public void addTransaction(Transaction tx){ // Transaction will be pulled from mempool, so already verified.
-        this.data += (tx);
+    public void addTransaction(Transaction tx) {
+        if (data.size() < dataLimit){
+            data.add(tx);
+            this.hash = calculateHash(); // Block rehashed when new data is added
+        }
+        else{System.out.println("Block has reached data limit!");}
     }
 
     public void setNonce(int nonce) {this.nonce = nonce;}
@@ -33,7 +41,7 @@ public class Block {
 
     public int getIndex() {return index;}
     public String getPreviousHash() {return previousHash;}
-    public String getData() {return data;}
+    public ArrayList<Transaction> getData() {return data;}
     public LocalDateTime getTimestamp() {return timestamp;}
     public int getNonce() {return nonce;}
     public String getHash() {return hash;}
