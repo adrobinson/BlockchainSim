@@ -4,8 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Blockchain extends LinkedList<Block> {
-    private int difficulty;
+    private int difficulty = 5;
+    private int rewardLimit = 50;
     private Block genesisBlock;
+    private int blockHeight = 0;
     private static Blockchain blockchain = new Blockchain();
     private LinkedHashMap<String, UTXO> utxo_pool = new LinkedHashMap<>();
 
@@ -19,9 +21,9 @@ public class Blockchain extends LinkedList<Block> {
         return false;
     }
 
-    public int getDifficulty() {
-        return difficulty;
-    }
+    public int getDifficulty() {return difficulty;}
+
+    public int getBlockHeight() {return blockHeight;}
 
     public void addUtxo(String utxoID, UTXO utxo){
         utxo_pool.put(utxoID, utxo);
