@@ -1,6 +1,7 @@
 package blockchainsim;
 
 public class UTXO {
+    private boolean pending = false;
     private String transactionID;
     private double outputIndex;
     private String recipientAddress;
@@ -24,7 +25,11 @@ public class UTXO {
         return recipientAddress;
     }
 
-    public double getOutputIndex() {
-        return outputIndex;
+    public double getOutputIndex() {return outputIndex;}
+
+    public boolean isPending() {return pending;}
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
     }
 }

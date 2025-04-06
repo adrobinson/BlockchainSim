@@ -14,8 +14,10 @@ public class Node {
 
     public Node(Blockchain blockchain){
         this.blockchain = blockchain;
+        utxoPool = blockchain.getUtxo_pool();
     }
 
+    //TODO Move verification methods into a consensus class
     public boolean verifyTransaction(Transaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return
             System.out.println("Invalid Transaction, signature not verified");
@@ -26,31 +28,34 @@ public class Node {
         double senderAmount = 0;
         double senderRemainder;
 
-        utxoPool = blockchain.getUtxo_pool();
+
         results.clear();
         tempResultIDs.clear(); // Clear this array after transaction been fully verified
 
         for(String utxoID: utxoPool.keySet()){
-            if(Objects.equals(utxoPool.get(utxoID).getAddress(), sender)) { // Look through utxoPool to find unspent currency for sender
+            if(!utxoPool.get(utxoID).isPending()) { // If utxo is pending, it cannot be used
+                if (Objects.equals(utxoPool.get(utxoID).getAddress(), sender)) { // Look through utxoPool to find unspent currency for sender
 
-                results.add(utxoID);
-                senderAmount += utxoPool.get(utxoID).getAmount();
+                    results.add(utxoID);
+                    senderAmount += utxoPool.get(utxoID).getAmount();
 
-                if (senderAmount >= tx.getAmount()) { // if sender has enough to complete transaction
+                    if (senderAmount >= tx.getAmount()) { // if sender has enough to complete transaction
 
-                    senderRemainder = senderAmount % tx.getAmount(); // get the remainder of the currency after the transaction
+                        senderRemainder = senderAmount % tx.getAmount(); // get the remainder of the currency after the transaction
 
-                    if (senderRemainder > 0.0){ // Only add to pendingUTXOs if sender has currency leftover
-                        pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, sender, senderRemainder),  '+'); // we keep the outputIndex as '0' until it is added to the actual utxo pool.
+                        if (senderRemainder > 0.0) { // Only add to pendingUTXOs if sender has currency leftover
+                            pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, sender, senderRemainder), '+'); // we keep the outputIndex as '0' until it is added to the actual utxo pool.
+                        }
+
+                        for (String result : results) {
+                            pendingUTXOs.put(utxoPool.get(result), '-'); // These transactions will be removed from the UTXO pool once the transaction has been added to the blockchain
+                            tempResultIDs.add(utxoPool.get(result).getTransactionID()); // Will be used to remove pending UTXO's if found invalid by other nodes
+                        }
+
+                        pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // The recipient to be added to the UTXO pool
+                        markUTXOsAsPending();
+                        return true;
                     }
-
-                    for(String result: results) {
-                        pendingUTXOs.put(utxoPool.get(result), '-'); // These transactions will be removed from the UTXO pool once the transaction has been added to the blockchain
-                        tempResultIDs.add(utxoPool.get(result).getTransactionID()); // Will be used to remove pending UTXO's if found invalid by other nodes
-                    }
-
-                    pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // The recipient to be added to the UTXO pool
-                    return true;
                 }
             }
         }
@@ -62,6 +67,16 @@ public class Node {
         }
 
         return true;
+    }
+
+    public void markUTXOsAsPending(){
+        for (UTXO utxo: pendingUTXOs.keySet()){ // Setting their pending var to true will make sure they can't be used in other transactions
+            for(String utxoID: utxoPool.keySet()){
+                if(Objects.equals(utxoPool.get(utxoID), utxo)){
+                    utxoPool.get(utxoID).setPending(true);
+                }
+            }
+        }
     }
 
     public void storeTransaction(Transaction tx){
