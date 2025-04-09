@@ -23,16 +23,30 @@ public class Block {
     public String calculateHash() {
         String input = index + timestamp.toString() + previousHash + data + nonce;
 
-        System.out.println("input" + input);
         return Encryptor.encryptString(String.valueOf(input));
     }
 
     public void addTransaction(Transaction tx) {
-        if (data.size() < dataLimit){
-            data.add(tx);
-            this.hash = calculateHash(); // Block rehashed when new data is added
+        if (!data.isEmpty()){
+            if (data.size() < dataLimit){
+                data.add(tx);
+                this.hash = calculateHash(); // Block rehashed when new data is added
+            } else {
+                System.out.println("Block has reached data limit!");
+            }
+        } else {
+            System.out.println("First transaction in block must be coinbase transaction");
         }
-        else{System.out.println("Block has reached data limit!");}
+
+    }
+
+    public void addTransaction(CoinbaseTransaction tx){
+        if(data.isEmpty()){
+            data.add(tx);
+        } else {
+            System.out.println("Cannot add more than one Coinbase transaction");
+        }
+
     }
 
     public void setNonce(int nonce) {this.nonce = nonce;}
