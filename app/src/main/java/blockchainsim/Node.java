@@ -18,54 +18,34 @@ public class Node {
     }
 
     //TODO Move verification methods into a consensus class
-    public boolean verifyTransaction(Transaction tx) throws Exception {
+    public boolean verifyTransaction(PeerTransaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return
             System.out.println("Invalid Transaction, signature not verified");
             return false;
         }
 
-        String sender = tx.getSender();
-        double senderAmount = 0;
-        double senderRemainder;
-
-
         results.clear();
         tempResultIDs.clear(); // Clear this array after transaction been fully verified
 
-        for(String utxoID: utxoPool.keySet()){
-            if(!utxoPool.get(utxoID).isPending()) { // If utxo is pending, it cannot be used
-                if (Objects.equals(utxoPool.get(utxoID).getAddress(), sender)) { // Look through utxoPool to find unspent currency for sender
-
-                    results.add(utxoID);
-                    senderAmount += utxoPool.get(utxoID).getAmount();
-
-                    if (senderAmount >= tx.getAmount()) { // if sender has enough to complete transaction
-
-                        senderRemainder = senderAmount % tx.getAmount(); // get the remainder of the currency after the transaction
-
-                        if (senderRemainder > 0.0) { // Only add to pendingUTXOs if sender has currency leftover
-                            pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, sender, senderRemainder), '+'); // we keep the outputIndex as '0' until it is added to the actual utxo pool.
-                        }
-
-                        for (String result : results) {
-                            pendingUTXOs.put(utxoPool.get(result), '-'); // These transactions will be removed from the UTXO pool once the transaction has been added to the blockchain
-                            tempResultIDs.add(utxoPool.get(result).getTransactionID()); // Will be used to remove pending UTXO's if found invalid by other nodes
-                        }
-
-                        pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // The recipient to be added to the UTXO pool
-                        markUTXOsAsPending();
-                        return true;
-                    }
-                }
-            }
-        }
-
-        // If the sender has insufficient funds after the utxo pool is checked, the transaction is abandoned
-        if (senderAmount < tx.getAmount()) {
+        double senderAmount = BCProtocol.verifySenderFunds(this, utxoPool, tx.getSender(), tx.getAmount());
+        System.out.println(senderAmount);
+        if (senderAmount < tx.getAmount()){
             System.out.println("Cannot make transaction, insufficient funds.");
             return false;
         }
 
+        // If sender has funds:
+        pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // transaction to be added to utxo pool
+
+        double senderRemainder = tx.getAmount() % senderAmount;
+        if (senderRemainder > 0.0){ pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getSender(), senderRemainder), '+'); } // If sender has remaining funds, add them back to utxo pool
+
+        for (String id: results) {
+            pendingUTXOs.put(utxoPool.get(id), '-'); // mark any funds that were used to be removed
+            tempResultIDs.add(utxoPool.get(id).getTransactionID());
+        }
+
+        markUTXOsAsPending();
         return true;
     }
 
@@ -115,6 +95,14 @@ public class Node {
 
     public boolean isTransactionAccepted() {
         return transactionAccepted;
+    }
+
+    public void addResult(String utxoID){
+        results.add(utxoID);
+    }
+
+    public void addPending(UTXO utxo, char action){
+        pendingUTXOs.put(utxo, action);
     }
 
     public ArrayList<Transaction> getMempool() {

@@ -14,7 +14,7 @@ public class PeerNetwork {
         nodeList.add(node);
     }
 
-    public int broadcastTransaction(Node originNode, Transaction tx) throws Exception {
+    public int broadcastTransaction(Node originNode, PeerTransaction tx) throws Exception {
 
         int accepted = 0;
         int rejected = 0;
@@ -33,7 +33,10 @@ public class PeerNetwork {
             }
         }
 
+        System.out.println("Accepted: " + accepted + " Rejected: " + rejected);
+
         if (accepted == 0){ // If all nodes found the transaction to be invalid, return 0
+            originNode.clearInvalidTransaction(tx); // remove invalid transaction from node that broadcasted it
             return 0;
         }
 
