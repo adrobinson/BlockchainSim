@@ -18,26 +18,26 @@ public class App {
 
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
-        Blockchain blockchain = Blockchain.getInstance();
+//        Blockchain blockchain = Blockchain.getInstance();
+//
+//        Miner miner = new Miner(blockchain);
+//        Wallet minerWallet = new Wallet();
+//
+//        // Genesis block creation, with coinbase transaction
+//        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
+//        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
+//
+//        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
+//
+//        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
+//
+//        Node myNode = new Node(blockchain);
+//
+//        BCProtocol.verifyBlockHash(GenesisBlock);
+//
+//        //BlockUtil.storeBlock(GenesisBlock);
 
-        Miner miner = new Miner(blockchain);
-        Wallet minerWallet = new Wallet();
-
-        // Genesis block creation, with coinbase transaction
-        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
-        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
-
-        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
-
-        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
-
-        Node myNode = new Node(blockchain);
-
-        BCProtocol.verifyBlockHash(GenesisBlock);
-
-        BlockUtil.storeBlock(GenesisBlock);
-
-
+        Block block = BlockUtil.readBlock("app/src/main/resources/BlockData/block0000000.json");
 
 
     }

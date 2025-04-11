@@ -13,6 +13,10 @@ public class Block {
     private String hash;
     private int difficulty;
 
+    public Block(){
+
+    }
+
     public Block(int index, String previousHash, int difficulty) {
         this.index = index;
         this.previousHash = previousHash;
