@@ -1,23 +1,25 @@
 package blockchainsim;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 
 public class Block {
     private int index;
-    private LocalDateTime timestamp;
+    private Long timestamp;
     private String previousHash;
     private ArrayList<Transaction> data = new ArrayList<>();
     private int dataLimit = 5;
     private int nonce;
     private String hash;
+    private int difficulty;
 
-    public Block(int index, String previousHash) {
+    public Block(int index, String previousHash, int difficulty) {
         this.index = index;
         this.previousHash = previousHash;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = System.currentTimeMillis();
         this.nonce = 0;
         this.hash = calculateHash();
+        this.difficulty = difficulty;
     }
 
     public String calculateHash() {
@@ -26,7 +28,7 @@ public class Block {
         return Encryptor.encryptString(String.valueOf(input));
     }
 
-    public void addTransaction(Transaction tx) {
+    public void addTransaction(PeerTransaction tx) {
         if (!data.isEmpty()){
             if (data.size() < dataLimit){
                 data.add(tx);
@@ -56,8 +58,9 @@ public class Block {
     public int getIndex() {return index;}
     public String getPreviousHash() {return previousHash;}
     public ArrayList<Transaction> getData() {return data;}
-    public LocalDateTime getTimestamp() {return timestamp;}
+    public Long getTimestamp() {return timestamp;}
     public int getNonce() {return nonce;}
     public String getHash() {return hash;}
 
+    public int getDifficulty() {return difficulty;}
 }

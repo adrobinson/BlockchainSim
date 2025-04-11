@@ -5,13 +5,11 @@ import java.util.Objects;
 
 public final class BCProtocol {
 
-    static Blockchain blockchain = Blockchain.getInstance();
-
     private BCProtocol(){
     }
 
     public static boolean verifyBlockHash(Block targetBlock) {
-        if (!targetBlock.getHash().startsWith("0".repeat(blockchain.getDifficulty()))) {
+        if (!targetBlock.getHash().startsWith("0".repeat(targetBlock.getDifficulty()))) {
             System.out.println("Block hash does not match difficulty");
             return false;
         }

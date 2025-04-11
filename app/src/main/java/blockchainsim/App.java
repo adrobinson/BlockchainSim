@@ -24,7 +24,7 @@ public class App {
         Wallet minerWallet = new Wallet();
 
         // Genesis block creation, with coinbase transaction
-        Block GenesisBlock = new Block(0, "00000000000000000000");
+        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
         GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
 
         miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
@@ -34,6 +34,8 @@ public class App {
         Node myNode = new Node(blockchain);
 
         BCProtocol.verifyBlockHash(GenesisBlock);
+
+        BlockUtil.storeBlock(GenesisBlock);
 
 
 

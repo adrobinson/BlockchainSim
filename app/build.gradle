@@ -22,7 +22,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-    implementation 'org.mapdb:mapdb:3.0.8'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
 
     // This dependency is used by the application.
     implementation libs.guava

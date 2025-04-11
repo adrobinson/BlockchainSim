@@ -11,11 +11,10 @@ public class PeerTransaction extends Transaction {
     private String sender;
     private byte[] signature;
 
-    public PeerTransaction(PublicKey sender, PublicKey receiver, Blockchain blockchain, double amount){
+    public PeerTransaction(PublicKey sender, PublicKey receiver, double amount){
         this.sender = Base64.getEncoder().encodeToString(sender.getEncoded());
         this.receiver = Base64.getEncoder().encodeToString(receiver.getEncoded());
         this.amount = amount;
-        this.blockchain = blockchain;
         this.timestamp = System.currentTimeMillis();
         this.transactionID = TransactionUtil.generateID(this.sender, this.receiver, this.amount, this.timestamp);
     }
