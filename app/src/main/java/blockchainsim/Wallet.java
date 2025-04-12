@@ -26,7 +26,7 @@ public class Wallet {
         }
     }
 
-    protected Key getPublicKey(){
+    protected PublicKey getPublicKey(){
         if (publicKey != null ) {
             return publicKey;
         }

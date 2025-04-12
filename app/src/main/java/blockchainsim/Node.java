@@ -49,11 +49,11 @@ public class Node {
     public void markUTXOsAsPending(Transaction tx){
         for(UTXO utxo: pendingUTXOs) {
             if(Objects.equals(utxo.getTransactionID(), tx.getTransactionID()))
-                for(String id: utxo.getOutputIndex()){
-                    if(utxoPool.get(id) != null){
-                        utxoPool.get(id).setPending(true); // marked as pending so double spending doesn't occur
+                    for(String id: utxo.getOutputIndex()){
+                        if(utxoPool.get(id) != null){
+                            utxoPool.get(id).setPending(true); // marked as pending so double spending doesn't occur
+                        }
                     }
-                }
         }
     }
 

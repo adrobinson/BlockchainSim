@@ -3,6 +3,7 @@
  */
 package blockchainsim;
 
+import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 import org.checkerframework.checker.units.qual.N;
 
@@ -18,10 +19,10 @@ public class App {
 
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
-//        Blockchain blockchain = Blockchain.getInstance();
-//
-//        Miner miner = new Miner(blockchain);
-//        Wallet minerWallet = new Wallet();
+        Blockchain blockchain = Blockchain.getInstance();
+
+        Miner miner = new Miner(blockchain);
+        Wallet minerWallet = new Wallet();
 //
 //        // Genesis block creation, with coinbase transaction
 //        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
@@ -35,9 +36,27 @@ public class App {
 //
 //        BCProtocol.verifyBlockHash(GenesisBlock);
 //
-//        //BlockUtil.storeBlock(GenesisBlock);
+//        BlockUtil.storeBlock(GenesisBlock);
 
-        Block block = BlockUtil.readBlock("app/src/main/resources/BlockData/block0000000.json");
+//        Block block = BlockUtil.readBlock("app/src/main/resources/BlockData/block0000000.json");
+
+        blockchain.addUtxo("id1", new UTXO("cb1", new ArrayList<>(), minerWallet.getPublicAddress(), 50.0));
+
+
+        Wallet wallet1 = new Wallet();
+        Wallet wallet2 = new Wallet();
+
+        PeerTransaction tx1 = new PeerTransaction(minerWallet.getPublicKey(), wallet1.getPublicKey(), 25.0);
+        tx1.signTransaction(minerWallet.getPrivateKey());
+
+        Node node1 = new Node(blockchain);
+        node1.verifyTransaction(tx1);
+
+        for(UTXO x: node1.getPendingUTXOs()){
+            System.out.println(x.getAmount() + " " + x.getOutputIndex());
+        }
+
+
 
 
     }
