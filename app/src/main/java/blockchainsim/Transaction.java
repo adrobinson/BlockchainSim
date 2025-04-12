@@ -7,6 +7,7 @@ public class Transaction {
     protected String transactionID;
 
     public String getReceiver() {return receiver;}
+    public String getSender(){return null;}
     public double getAmount() {return amount;}
     public String getTransactionID() {return transactionID;}
 

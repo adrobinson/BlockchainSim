@@ -1,12 +1,14 @@
 package blockchainsim;
 
+import java.util.ArrayList;
+
 public class UTXO {
     private boolean pending = false;
     private String transactionID;
-    private double outputIndex;
+    private ArrayList<String> outputIndex;
     private String recipientAddress;
     private double amount;
-    public UTXO(String transactionID, int outputIndex, String recipientAddress, double amount) {
+    public UTXO(String transactionID, ArrayList<String> outputIndex, String recipientAddress, double amount) {
         this.transactionID = transactionID;
         this.outputIndex = outputIndex;
         this.recipientAddress = recipientAddress;
@@ -25,7 +27,7 @@ public class UTXO {
         return recipientAddress;
     }
 
-    public double getOutputIndex() {return outputIndex;}
+    public ArrayList<String> getOutputIndex() {return outputIndex;}
 
     public boolean isPending() {return pending;}
 

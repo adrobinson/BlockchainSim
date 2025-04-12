@@ -35,5 +35,14 @@ public class BlockUtil {
         }
     }
 
+    public static Block readBlock(File file)  {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(file, Block.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 

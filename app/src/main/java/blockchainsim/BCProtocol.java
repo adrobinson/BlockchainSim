@@ -31,7 +31,7 @@ public final class BCProtocol {
             if(!utxoPool.get(utxoID).isPending()) { // If utxo is pending, it cannot be used
                 if (Objects.equals(utxoPool.get(utxoID).getAddress(), sender)) { // Look through utxoPool to find unspent currency for sender
 
-                    node.addResult(utxoID);
+                    node.addToBeSpent(utxoID);
                     senderAmount += utxoPool.get(utxoID).getAmount();
 
                     if (senderAmount >= amount) { // if sender has enough to complete transaction

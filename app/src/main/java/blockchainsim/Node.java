@@ -1,13 +1,14 @@
 package blockchainsim;
 
+import java.io.File;
 import java.util.*;
 
 public class Node {
 
     private ArrayList<Transaction> mempool = new ArrayList<>(); // The mempool will store unconfirmed transactions to be validated by the nodes.
-    private LinkedHashMap<UTXO, Character> pendingUTXOs = new LinkedHashMap<>(); // LinkedHashMap so we can track insertion order and UTXO outputIndex (prevent conflicts)
+    private ArrayList<UTXO> pendingUTXOs = new ArrayList<>(); // LinkedHashMap so we can track insertion order and UTXO outputIndex (prevent conflicts)
     private ArrayList<String> tempResultIDs = new ArrayList<>();
-    private ArrayList<String> results = new ArrayList<>();
+    private ArrayList<String> toBeSpent = new ArrayList<>();
     private HashMap<String, UTXO> utxoPool;
     private Blockchain blockchain;
     private boolean transactionAccepted;
@@ -17,15 +18,14 @@ public class Node {
         utxoPool = blockchain.getUtxo_pool();
     }
 
-    //TODO Move verification methods into a consensus class
+
     public boolean verifyTransaction(PeerTransaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return
             System.out.println("Invalid Transaction, signature not verified");
             return false;
         }
 
-        results.clear();
-        tempResultIDs.clear(); // Clear this array after transaction been fully verified
+        toBeSpent.clear();
 
         double senderAmount = BCProtocol.verifySenderFunds(this, utxoPool, tx.getSender(), tx.getAmount());
         System.out.println(senderAmount);
@@ -35,27 +35,25 @@ public class Node {
         }
 
         // If sender has funds:
-        pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getReceiver(), tx.getAmount()), '+'); // transaction to be added to utxo pool
+        pendingUTXOs.add(new UTXO(tx.getTransactionID(), toBeSpent, tx.getReceiver(), tx.getAmount())); // transaction to be added to utxo pool
 
         double senderRemainder = tx.getAmount() % senderAmount;
-        if (senderRemainder > 0.0){ pendingUTXOs.put(new UTXO(tx.getTransactionID(), 0, tx.getSender(), senderRemainder), '+'); } // If sender has remaining funds, add them back to utxo pool
+        if (senderRemainder > 0.0){
+            pendingUTXOs.add(new UTXO(tx.getTransactionID(), utxoPool.get(toBeSpent.getLast()).getOutputIndex(), tx.getSender(), senderRemainder));
+        } // If sender has remaining funds, add them back to utxo pool. Left over currency will inherit the output index of the utxo they are from
+        markUTXOsAsPending(tx);
 
-        for (String id: results) {
-            pendingUTXOs.put(utxoPool.get(id), '-'); // mark any funds that were used to be removed
-            tempResultIDs.add(utxoPool.get(id).getTransactionID());
-        }
-
-        markUTXOsAsPending();
         return true;
     }
 
-    public void markUTXOsAsPending(){
-        for (UTXO utxo: pendingUTXOs.keySet()){ // Setting their pending var to true will make sure they can't be used in other transactions
-            for(String utxoID: utxoPool.keySet()){
-                if(Objects.equals(utxoPool.get(utxoID), utxo)){
-                    utxoPool.get(utxoID).setPending(true);
+    public void markUTXOsAsPending(Transaction tx){
+        for(UTXO utxo: pendingUTXOs) {
+            if(Objects.equals(utxo.getTransactionID(), tx.getTransactionID()))
+                for(String id: utxo.getOutputIndex()){
+                    if(utxoPool.get(id) != null){
+                        utxoPool.get(id).setPending(true); // marked as pending so double spending doesn't occur
+                    }
                 }
-            }
         }
     }
 
@@ -73,17 +71,16 @@ public class Node {
 
     // If a transaction is found to be invalid by majority nodes, nodes that falsely validated it will run this method
     public void clearInvalidTransaction(Transaction tx){
-        List<UTXO> toRemove = new ArrayList<>();
-        for(UTXO utxo: pendingUTXOs.keySet()){
-                if (Objects.equals(utxo.getTransactionID(), tx.getTransactionID()) || tempResultIDs.contains(utxo.getTransactionID())){
-                    toRemove.add(utxo);
+        for(UTXO utxo: pendingUTXOs){
+            if(Objects.equals(utxo.getTransactionID(), tx.getTransactionID())){ // get pending utxo's that reference the transaction
+                for(String id: utxo.getOutputIndex()){
+                    if(utxoPool.get(id) != null) {
+                        utxoPool.get(id).setPending(false); // set pending to false so utxo can be spent
+                    }
                 }
-        }
-
-        if(toRemove.getFirst() != null){
-            for(UTXO utxo: toRemove){
-                removePendingUTXO(utxo);
+                pendingUTXOs.remove(utxo);
             }
+
         }
 
 
@@ -97,19 +94,15 @@ public class Node {
         return transactionAccepted;
     }
 
-    public void addResult(String utxoID){
-        results.add(utxoID);
-    }
-
-    public void addPending(UTXO utxo, char action){
-        pendingUTXOs.put(utxo, action);
+    public void addToBeSpent(String utxoID){
+        toBeSpent.add(utxoID);
     }
 
     public ArrayList<Transaction> getMempool() {
         return mempool;
     }
 
-    public HashMap<UTXO, Character> getPendingUTXOs() {
+    public ArrayList<UTXO> getPendingUTXOs() {
         return pendingUTXOs;
     }
 
