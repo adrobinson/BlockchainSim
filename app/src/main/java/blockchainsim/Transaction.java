@@ -7,10 +7,9 @@ public class Transaction {
     protected double amount;
     protected long timestamp;
     protected String transactionID;
-    protected ArrayList<Object> outputs = new ArrayList<>();
+    protected ArrayList<Object> outputs;
 
     public String getReceiver() {return receiver;}
-    public String getSender(){return null;}
     public double getAmount() {return amount;}
     public String getTransactionID() {return transactionID;}
 

@@ -13,7 +13,7 @@ import java.util.Base64;
 public class PeerTransaction extends Transaction {
     private String sender;
     private byte[] signature;
-    private ArrayList<Object> inputs = new ArrayList<>();
+    private ArrayList<Object> inputs;
 
     public PeerTransaction(PublicKey sender, PublicKey receiver, double amount){
         this.sender = Base64.getEncoder().encodeToString(sender.getEncoded());
@@ -21,6 +21,8 @@ public class PeerTransaction extends Transaction {
         this.amount = amount;
         this.timestamp = System.currentTimeMillis();
         this.transactionID = TransactionUtil.generateID(this.sender, this.receiver, this.amount, this.timestamp);
+        this.inputs = new ArrayList<>();
+        this.outputs = new ArrayList<>();
     }
 
     public void signTransaction(PrivateKey privateKey) throws Exception{

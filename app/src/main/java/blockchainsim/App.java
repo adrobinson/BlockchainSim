@@ -19,26 +19,17 @@ public class App {
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
         Blockchain blockchain = Blockchain.getInstance();
-//
-//        Miner miner = new Miner(blockchain);
-//        Wallet minerWallet = new Wallet();
-//
-//        // Genesis block creation, with coinbase transaction
-//        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
-//        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
-//
-//        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
-//
-//        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
-//
-//        Node myNode = new Node(blockchain);
-//
-//        BCProtocol.verifyBlockHash(GenesisBlock);
-//
-//        //BlockUtil.storeBlock(GenesisBlock);
+
+        Miner miner = new Miner(blockchain);
+        Wallet minerWallet = new Wallet();
+
+        // Genesis block creation, with coinbase transaction
+        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
+        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
+
+        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
 
         Node node1 = new Node(blockchain);
-
 
         Wallet wallet1 = new Wallet();
         Wallet wallet2 = new Wallet();
@@ -52,7 +43,13 @@ public class App {
 
         System.out.println(tx.getInputs() + " " + tx.getOutputs());
 
+        GenesisBlock.addTransaction(tx);
 
+        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
+
+        BCProtocol.verifyBlockHash(GenesisBlock);
+
+        BlockUtil.storeBlock(GenesisBlock);
     }
 
 

@@ -1,6 +1,7 @@
 package blockchainsim;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class CoinbaseTransaction extends Transaction{
@@ -9,5 +10,7 @@ public class CoinbaseTransaction extends Transaction{
         this.amount = amount;
         this.timestamp = System.currentTimeMillis();
         this.transactionID = TransactionUtil.generateID("Coinbase", this.receiver, amount, this.timestamp);
+        this.outputs = new ArrayList<>();
+        addOutput(amount, this.receiver);
     }
 }

@@ -3,8 +3,12 @@ package blockchainsim;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +21,20 @@ public class BlockUtil {
     public static void storeBlock(Block block) {
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Block.class, new BlockSerializer());
+        mapper.registerModule(module);
+
 
         try{
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("app/src/main/resources/BlockData/block000000" + block.getIndex() + ".json"), block);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            mapper.writeValue(new File("app/src/main/resources/BlockData/block000000000" + block.getIndex() + ".json"), block);
+
+        } catch(IOException e){
+            throw(new RuntimeException(e));
         }
+
 
     }
 

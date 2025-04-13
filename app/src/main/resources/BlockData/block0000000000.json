@@ -1,0 +1,30 @@
+{
+  "header" : [ {
+    "index" : 0,
+    "timestamp" : 1744573983923,
+    "previousHash" : "00000000000000000000",
+    "Hash" : "00000286553842b4f49fff0091152dbeb3a629e3b71cff334c6d0c2c2a48205b"
+  } ],
+  "data" : [ {
+    "6962ff66015bff28e289027099c811d1b770b99b8d2493e27b5959d10a52888d" : {
+      "outputs" : [ {
+        "value" : 50.0,
+        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcvCepbAJiRbr7kzrY6Mpx6PJPOwR96RbiB2eTfof7R4FcLaTL5jsqN5b62vQrQL+JhS6CTMzxIIdrEav9TBhjg=="
+      } ]
+    }
+  }, {
+    "18fa4a6e7b3a94f41c0ce96e6dcee4efeec0d2f690c094f3b60a35afa513af48" : {
+      "inputs" : [ {
+        "txid" : "tx1",
+        "outputIndex" : 0
+      } ],
+      "outputs" : [ {
+        "value" : 5.0,
+        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMQwycdefTdkjC25EA0KnkZwZvN9EYK7/rMCrc020scQFrW+nVf+v1Jd0yKbsd1VS5/0LWjtXygw3ID9J4M7ECw=="
+      }, {
+        "value" : 5.0,
+        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEIAIP9m2mYRqWNZgebjNcHtMzcVEGjdoe4c/tm1ApPxjdbeRJZZv62j/sZFffi3SoXlnrxkLkQsLEaJO7/4cTxQ=="
+      } ]
+    }
+  } ]
+}
