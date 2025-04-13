@@ -24,4 +24,7 @@ public class Blockchain extends LinkedList<Block> {
 
     public int getBlockHeight() {return blockHeight;}
 
+    public int getRewardLimit() {
+        return rewardLimit;
+    }
 }

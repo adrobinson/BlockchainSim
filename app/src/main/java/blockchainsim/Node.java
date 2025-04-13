@@ -17,7 +17,7 @@ public class Node {
         utxoPool = new LinkedHashMap<>();
     }
 
-    // STORE INPUTS
+    // Method for verifying peer transactions
     public boolean verifyTransaction(PeerTransaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return
             System.out.println("Invalid Transaction, signature not verified");
@@ -44,6 +44,17 @@ public class Node {
         markUTXOsAsPending(tx);
 
         return true;
+    }
+
+    // Method for verifying coinbase transactions
+    public boolean verifyTransaction(CoinbaseTransaction tx){
+        if(tx.getAmount() > blockchain.getRewardLimit()){
+            return false;
+        }
+
+        tx.addOutput(tx.getAmount(), tx.getReceiver());
+        return true;
+
     }
 
     public void markUTXOsAsPending(PeerTransaction tx){
