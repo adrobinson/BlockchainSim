@@ -50,7 +50,7 @@ public class PeerNetwork {
         return 2; // majority/all nodes found transaction to be true
     }
 
-    public void rectifyTransaction(Transaction tx){
+    public void rectifyTransaction(PeerTransaction tx){
         for(Node node: nodeList){
             if(node.isTransactionAccepted()){ // If node rejected transaction, do not run the clear function
                 node.clearInvalidTransaction(tx);

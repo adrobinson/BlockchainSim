@@ -1,15 +1,19 @@
 package blockchainsim;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class PeerTransaction extends Transaction {
     private String sender;
     private byte[] signature;
+    private ArrayList<Object> inputs = new ArrayList<>();
 
     public PeerTransaction(PublicKey sender, PublicKey receiver, double amount){
         this.sender = Base64.getEncoder().encodeToString(sender.getEncoded());
@@ -42,5 +46,12 @@ public class PeerTransaction extends Transaction {
     }
 
     public String getSender() {return sender;}
+
+    public ArrayList<Object> getInputs() {return inputs;}
+
+    public void addInput(String txId, int outputIndex){
+        inputs.add(txId);
+        inputs.add(outputIndex);
+    }
 
 }

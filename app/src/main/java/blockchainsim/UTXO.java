@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class UTXO {
     private boolean pending = false;
     private String transactionID;
-    private ArrayList<String> outputIndex;
+    private ArrayList<Integer> outputIndex;
     private String recipientAddress;
     private double amount;
-    public UTXO(String transactionID, ArrayList<String> outputIndex, String recipientAddress, double amount) {
+    public UTXO(String transactionID, ArrayList<Integer> outputIndex, String recipientAddress, double amount) {
         this.transactionID = transactionID;
         this.outputIndex = outputIndex;
         this.recipientAddress = recipientAddress;
@@ -27,7 +27,7 @@ public class UTXO {
         return recipientAddress;
     }
 
-    public ArrayList<String> getOutputIndex() {return outputIndex;}
+    public ArrayList<Integer> getOutputIndex() {return outputIndex;}
 
     public boolean isPending() {return pending;}
 

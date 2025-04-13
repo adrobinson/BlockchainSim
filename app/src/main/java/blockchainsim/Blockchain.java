@@ -9,7 +9,6 @@ public class Blockchain extends LinkedList<Block> {
     private Block genesisBlock;
     private int blockHeight = 0;
     private static Blockchain blockchain = new Blockchain();
-    private LinkedHashMap<String, UTXO> utxo_pool = new LinkedHashMap<>();
 
     private Blockchain(){}
     public static Blockchain getInstance() {
@@ -25,13 +24,4 @@ public class Blockchain extends LinkedList<Block> {
 
     public int getBlockHeight() {return blockHeight;}
 
-    public void addUtxo(String utxoID, UTXO utxo){
-        utxo_pool.put(utxoID, utxo);
-    }
-
-    public void removeUtxo(String utxoID){
-        utxo_pool.remove(utxoID);
-    }
-
-    public LinkedHashMap<String, UTXO> getUtxo_pool() {return utxo_pool;}
 }

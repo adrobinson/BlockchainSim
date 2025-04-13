@@ -18,7 +18,7 @@ public class App {
 
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
-//        Blockchain blockchain = Blockchain.getInstance();
+        Blockchain blockchain = Blockchain.getInstance();
 //
 //        Miner miner = new Miner(blockchain);
 //        Wallet minerWallet = new Wallet();
@@ -37,7 +37,20 @@ public class App {
 //
 //        //BlockUtil.storeBlock(GenesisBlock);
 
-        Block block = BlockUtil.readBlock("app/src/main/resources/BlockData/block0000000.json");
+        Node node1 = new Node(blockchain);
+
+
+        Wallet wallet1 = new Wallet();
+        Wallet wallet2 = new Wallet();
+
+        node1.addUTXOtoPool(new UTXO("tx1", null, wallet1.getPublicAddress(), 10.0));
+
+        PeerTransaction tx = new PeerTransaction((PublicKey) wallet1.getPublicKey(), (PublicKey) wallet2.getPublicKey(), 5.0);
+        tx.signTransaction(wallet1.getPrivateKey());
+
+        System.out.println(node1.verifyTransaction(tx));
+
+        System.out.println(tx.getInputs() + " " + tx.getOutputs());
 
 
     }
