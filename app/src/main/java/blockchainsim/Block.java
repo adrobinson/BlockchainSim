@@ -1,6 +1,10 @@
 package blockchainsim;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 
 public class Block {
@@ -12,9 +16,16 @@ public class Block {
     private int nonce;
     private String hash;
     private int difficulty;
+    private String formattedData;
 
-    public Block(){
-
+    @JsonCreator
+    public Block(JsonNode index, JsonNode timestamp, JsonNode previousHash, JsonNode hash, JsonNode nonce, JsonNode diff){
+        this.index = index.asInt();
+        this.timestamp = timestamp.asLong();
+        this.previousHash = previousHash.asText();
+        this.hash = hash.asText();
+        this.nonce = nonce.asInt();
+        this.difficulty = diff.asInt();
     }
 
     public Block(int index, String previousHash, int difficulty) {
@@ -27,7 +38,7 @@ public class Block {
     }
 
     public String calculateHash() {
-        String input = index + timestamp.toString() + previousHash + data + nonce;
+        String input = index + timestamp.toString() + previousHash + formattedData + nonce;
 
         return Encryptor.encryptString(String.valueOf(input));
     }
@@ -36,6 +47,7 @@ public class Block {
         if (!data.isEmpty()){
             if (data.size() < dataLimit){
                 data.add(tx);
+                this.formattedData = BlockUtil.formatData(data);
                 this.hash = calculateHash(); // Block rehashed when new data is added
             } else {
                 System.out.println("Block has reached data limit!");
@@ -58,6 +70,9 @@ public class Block {
     public void setNonce(int nonce) {this.nonce = nonce;}
     public void setHash(String hash) {this.hash = hash;}
     public void setPreviousHash(String previousHash) {this.previousHash = previousHash;}
+    public void setTimestamp(Long timestamp) {this.timestamp = timestamp;}
+    public void setDifficulty(int difficulty) {this.difficulty = difficulty;}
+    public void setIndex(int index) {this.index = index;}
 
     public int getIndex() {return index;}
     public String getPreviousHash() {return previousHash;}

@@ -13,6 +13,30 @@ public class Transaction {
     public double getAmount() {return amount;}
     public String getTransactionID() {return transactionID;}
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setOutputs(ArrayList<Object> outputs) {
+        this.outputs = outputs;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
     public ArrayList<Object> getOutputs() {return outputs;}
     public void addOutput(double value, String address){
         outputs.add(value);

@@ -15,6 +15,11 @@ public class PeerTransaction extends Transaction {
     private byte[] signature;
     private ArrayList<Object> inputs;
 
+    public PeerTransaction(){
+        this.inputs = new ArrayList<>();
+        this.outputs = new ArrayList<>();
+    }
+
     public PeerTransaction(PublicKey sender, PublicKey receiver, double amount){
         this.sender = Base64.getEncoder().encodeToString(sender.getEncoded());
         this.receiver = Base64.getEncoder().encodeToString(receiver.getEncoded());
@@ -50,6 +55,14 @@ public class PeerTransaction extends Transaction {
     public String getSender() {return sender;}
 
     public ArrayList<Object> getInputs() {return inputs;}
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setInputs(ArrayList<Object> inputs) {
+        this.inputs = inputs;
+    }
 
     public void addInput(String txId, int outputIndex){
         inputs.add(txId);

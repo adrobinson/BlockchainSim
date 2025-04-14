@@ -6,13 +6,12 @@ package blockchainsim;
 import org.checkerframework.checker.units.qual.C;
 import org.checkerframework.checker.units.qual.N;
 
+import java.io.File;
 import java.security.PublicKey;
 import java.util.*;
 
 public class App {
 
-    ///TODO the decentralise Nodes UTXO stores by calculating it from reading the blockchain
-    ///TODO Add mining reward for mining blocks
 
     public static void main(String[] args) throws Exception {
 
@@ -29,6 +28,7 @@ public class App {
 
         System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
 
+        //TEST TRANSACTION/VERIFICATION TO ADD TO BLOCK------------------------------------------------
         Node node1 = new Node(blockchain);
 
         Wallet wallet1 = new Wallet();
@@ -39,17 +39,29 @@ public class App {
         PeerTransaction tx = new PeerTransaction((PublicKey) wallet1.getPublicKey(), (PublicKey) wallet2.getPublicKey(), 5.0);
         tx.signTransaction(wallet1.getPrivateKey());
 
-        System.out.println(node1.verifyTransaction(tx));
-
-        System.out.println(tx.getInputs() + " " + tx.getOutputs());
+        node1.verifyTransaction(tx);
 
         GenesisBlock.addTransaction(tx);
 
+        //---------------------------------------------------------------------------------------------
+
+        // Mine Genesis Block
         miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
 
+        //Verify Genesis block with proof of work
         BCProtocol.verifyBlockHash(GenesisBlock);
 
+        //Serialize block into json format
         BlockUtil.storeBlock(GenesisBlock);
+
+        //De-serialize block from json back into block object
+        Block block = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000000.json"));
+
+        //Check block is valid
+        BCProtocol.verifyBlockHash(block);
+
+
+
     }
 
 

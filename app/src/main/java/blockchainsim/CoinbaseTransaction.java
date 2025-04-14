@@ -1,10 +1,15 @@
 package blockchainsim;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Base64;
 
 public class CoinbaseTransaction extends Transaction{
+    public CoinbaseTransaction(){
+        this.outputs = new ArrayList<>();
+    }
     public CoinbaseTransaction(PublicKey receiver, double amount){
         this.receiver = Base64.getEncoder().encodeToString(receiver.getEncoded());
         this.amount = amount;

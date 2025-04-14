@@ -17,6 +17,27 @@ public class Node {
         utxoPool = new LinkedHashMap<>();
     }
 
+//    public void buildLocalUTXOPool(String pathToBlockDirectory){
+//        File directory = new File(pathToBlockDirectory);
+//        if(directory.exists() && directory.isDirectory()){
+//            File[] files = directory.listFiles();
+//
+//            if(files != null){
+//                System.out.println(Arrays.toString(files));
+//                for(File file: files) { // read all block files
+//                    Block block = BlockUtil.readBlock(file);
+//                    System.out.println(block);
+//                    for (Transaction tx: block.getData()){ // read all transactions in blocks
+//                    }
+//                }
+//            } else {
+//                System.out.println("This directory is empty");
+//            }
+//        } else {
+//            System.out.println("This directory doesn't exist");
+//        }
+//    }
+
     // Method for verifying peer transactions
     public boolean verifyTransaction(PeerTransaction tx) throws Exception {
         if (!tx.verifySignature()) { // If signature cannot be verified, display message and return

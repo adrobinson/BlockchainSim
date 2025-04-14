@@ -26,7 +26,9 @@ public class BlockSerializer extends StdSerializer<Block> {
         jsonGen.writeNumberField("index" , block.getIndex());
         jsonGen.writeNumberField("timestamp", block.getTimestamp());
         jsonGen.writeStringField("previousHash", block.getPreviousHash());
-        jsonGen.writeStringField("Hash", block.getHash());
+        jsonGen.writeStringField("hash", block.getHash());
+        jsonGen.writeNumberField("nonce", block.getNonce());
+        jsonGen.writeNumberField("difficulty", block.getDifficulty());
         jsonGen.writeEndObject();
         jsonGen.writeEndArray(); // HEADER END
 
@@ -35,8 +37,12 @@ public class BlockSerializer extends StdSerializer<Block> {
         for(Transaction tx: block.getData()){
             jsonGen.writeStartObject();
             jsonGen.writeObjectFieldStart(tx.getTransactionID()); // TRANSACTION START
+            jsonGen.writeNumberField("timestamp", tx.getTimestamp());
 
             if(tx instanceof PeerTransaction){ // IF PEER TX, INCLUDE INPUTS
+                jsonGen.writeStringField("sender", ((PeerTransaction) tx).getSender()); // Sender and receiever in peer transaction as these transactions can have multiple outputs
+                jsonGen.writeStringField("recipient", ((PeerTransaction) tx).getReceiver());
+                jsonGen.writeNumberField("amount", tx.getAmount());
 
                 jsonGen.writeArrayFieldStart("inputs"); // INPUTS ARRAY START
                 for(int i = 0; i < ((PeerTransaction) tx).getInputs().size(); i = i+2){
