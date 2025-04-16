@@ -1,6 +1,9 @@
 package blockchainsim;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import javax.annotation.Nullable;
 import java.security.*;
 import java.util.Base64;
 
@@ -8,6 +11,11 @@ public class Wallet {
     private KeyPairGenerator kpg;
     private PrivateKey privateKey;
     private PublicKey publicKey;
+
+    public Wallet(PublicKey pubKey, PrivateKey privKey){
+        this.publicKey = pubKey;
+        this.privateKey = privKey;
+    }
 
     public Wallet() {
 
@@ -26,24 +34,21 @@ public class Wallet {
         }
     }
 
-    protected Key getPublicKey(){
-        if (publicKey != null ) {
+    protected Key getPublicKey() {
+        if (publicKey != null) {
             return publicKey;
         }
         return null;
     }
 
     protected PrivateKey getPrivateKey() {
-        if (privateKey != null){
+        if (privateKey != null) {
             return privateKey;
         }
         return null;
     }
 
-    protected String getPublicAddress(){
+    protected String getPublicAddress() {
         return Base64.getEncoder().encodeToString(publicKey.getEncoded());
     }
-
-
-
 }

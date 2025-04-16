@@ -19,46 +19,43 @@ public class App {
 
         Blockchain blockchain = Blockchain.getInstance();
 
-        Miner miner = new Miner(blockchain);
-        Wallet minerWallet = new Wallet();
+         Miner miner = new Miner(blockchain);
+         Wallet minerWallet = new Wallet();
 
-        // Genesis block creation, with coinbase transaction
-        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
-        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
+        System.out.println(minerWallet.getPublicAddress() + " " + minerWallet.getPublicKey() + " " + minerWallet.getPrivateKey());
 
-        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
+         WalletUtil.storeWallet(minerWallet, "minerWallet");
 
-        //TEST TRANSACTION/VERIFICATION TO ADD TO BLOCK------------------------------------------------
-        Node node1 = new Node(blockchain);
+        Wallet minerWallet2 = WalletUtil.loadWallet("app/src/main/resources/WalletData/minerWallet.json");
 
-        Wallet wallet1 = new Wallet();
-        Wallet wallet2 = new Wallet();
+        System.out.println(minerWallet2.getPublicAddress() + " " + minerWallet2.getPublicKey() + " " + minerWallet2.getPrivateKey());
 
-        node1.addUTXOtoPool(new UTXO("tx1", null, wallet1.getPublicAddress(), 10.0));
 
-        PeerTransaction tx = new PeerTransaction((PublicKey) wallet1.getPublicKey(), (PublicKey) wallet2.getPublicKey(), 5.0);
-        tx.signTransaction(wallet1.getPrivateKey());
-
-        node1.verifyTransaction(tx);
-
-        GenesisBlock.addTransaction(tx);
-
-        //---------------------------------------------------------------------------------------------
-
-        // Mine Genesis Block
-        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
-
-        //Verify Genesis block with proof of work
-        BCProtocol.verifyBlockHash(GenesisBlock);
-
-        //Serialize block into json format
-        BlockUtil.storeBlock(GenesisBlock);
-
-        //De-serialize block from json back into block object
-        Block block = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000000.json"));
-
-        //Check block is valid
-        BCProtocol.verifyBlockHash(block);
+//        //Genesis block creation, with coinbase transaction
+//        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());
+//        GenesisBlock.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
+//
+//        System.out.println("\n-------------\nGenesis block\n-------------\nHash: " + GenesisBlock.getHash() + "\nNonce: " + GenesisBlock.getNonce());
+//
+//        //TEST TRANSACTION/VERIFICATION TO ADD TO BLOCK------------------------------------------------
+//
+//
+//        //---------------------------------------------------------------------------------------------
+//
+//        // Mine Genesis Block
+//        miner.mineBlock(GenesisBlock, blockchain.getDifficulty());
+//
+//        //Verify Genesis block with proof of work
+//        BCProtocol.verifyBlockHash(GenesisBlock);
+//
+//        //Serialize block into json format
+//        BlockUtil.storeBlock(GenesisBlock);
+//
+//        //De-serialize block from json back into block object
+//        Block block = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000000.json"));
+//
+//        //Check block is valid
+//        BCProtocol.verifyBlockHash(block);
 
 
 

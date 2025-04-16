@@ -1,36 +1,18 @@
 {
   "header" : [ {
     "index" : 0,
-    "timestamp" : 1744665530058,
+    "timestamp" : 1744838399401,
     "previousHash" : "00000000000000000000",
-    "hash" : "000001ed1b88cebeb50b75a9724bd06090febc1b5484d3db11bac5105ae9f674",
-    "nonce" : 17727,
+    "hash" : "00000bacee740e750d509a2be0cf3ef36c59a3821274b99ad629e6e562dc5f30",
+    "nonce" : 2295513,
     "difficulty" : 5
   } ],
   "data" : [ {
-    "acee24e3452fe0d6df797243f0b1582ad114cab8adc23b908a82fa5282bd20ca" : {
-      "timestamp" : 1744665530082,
+    "8432db2be73193a48206269a5a19aeebdd85b395d7392556f0bc1acd8788b7f9" : {
+      "timestamp" : 1744838399410,
       "outputs" : [ {
         "value" : 50.0,
-        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExwO3M4LLnEmaxmi98MyGp8O9dwezZi1De3ObxRNsECYKO36cmAcRL5RfWbePD9gT+t961s0vtEHWaQPAercH6g=="
-      } ]
-    }
-  }, {
-    "ba824c1d481277b30e2feece539cb5e359d4067fd1d05517fce577d258c1d779" : {
-      "timestamp" : 1744665530108,
-      "sender" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkGFNdcMhLnJisYsLkPdIZpSjhYqGAjh8I+/9feyM4zhAQP7hS/5K3aqlY0KBXDk8GMV3gyNTup8nG6MmN/NpPg==",
-      "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsGRNWVl0Ax5eWa8Zv7NcRZDQ6o8ohOVDpHj9rvZY3rxh0dK5p4hko45qoLoQPoO2NUM4daKJ6vioQvJfKJlT8g==",
-      "amount" : 5.0,
-      "inputs" : [ {
-        "txid" : "tx1",
-        "outputIndex" : 0
-      } ],
-      "outputs" : [ {
-        "value" : 5.0,
-        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsGRNWVl0Ax5eWa8Zv7NcRZDQ6o8ohOVDpHj9rvZY3rxh0dK5p4hko45qoLoQPoO2NUM4daKJ6vioQvJfKJlT8g=="
-      }, {
-        "value" : 5.0,
-        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkGFNdcMhLnJisYsLkPdIZpSjhYqGAjh8I+/9feyM4zhAQP7hS/5K3aqlY0KBXDk8GMV3gyNTup8nG6MmN/NpPg=="
+        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEe7OucBNANROx/WLqF0JTJsxycLRexsQypuuVwaPY8Btcfy0Jq7UZxoKA1i1hyTP/36kY73U0a0lTotqp8cQM4g=="
       } ]
     }
   } ]
