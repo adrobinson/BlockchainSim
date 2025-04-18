@@ -17,19 +17,43 @@ public class App {
 
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
+        Block genBlock = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000000.json"));
+
         Blockchain blockchain = Blockchain.getInstance();
 
-         Miner miner = new Miner(blockchain);
-         Wallet minerWallet = new Wallet();
+        Miner miner = new Miner(blockchain);
+
+        Wallet minerWallet = WalletUtil.loadWallet("app/src/main/resources/WalletData/minerWallet.json");
 
         System.out.println(minerWallet.getPublicAddress() + " " + minerWallet.getPublicKey() + " " + minerWallet.getPrivateKey());
 
-         WalletUtil.storeWallet(minerWallet, "minerWallet");
+        Wallet wallet1 = new Wallet();
 
-        Wallet minerWallet2 = WalletUtil.loadWallet("app/src/main/resources/WalletData/minerWallet.json");
+        Node node = new Node(blockchain);
+        node.buildLocalChainData("app/src/main/resources/BlockData");
+        System.out.println(node.getUtxoPool().entrySet());
 
-        System.out.println(minerWallet2.getPublicAddress() + " " + minerWallet2.getPublicKey() + " " + minerWallet2.getPrivateKey());
-
+//        PeerTransaction tx = new PeerTransaction((PublicKey) minerWallet.getPublicKey(), (PublicKey) wallet1.getPublicKey(), 20.0);
+//        tx.signTransaction(minerWallet.getPrivateKey());
+//
+//        System.out.println(
+//                node.getUtxoPool().get(0).getAddress() + "\n" + tx.getSender()
+//        );
+//
+//        node.verifyTransaction(tx);
+//
+//        System.out.println(tx.getInputs() + "\n" + tx.getOutputs());
+//
+//        Block block = new Block(1, genBlock.getHash(), blockchain.getDifficulty());
+//
+//        block.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), 50.0));
+//        block.addTransaction(tx);
+//
+//        miner.mineBlock(block, block.getDifficulty());
+//
+//        BCProtocol.verifyBlockHash(block);
+//
+//        BlockUtil.storeBlock(block);
 
 //        //Genesis block creation, with coinbase transaction
 //        Block GenesisBlock = new Block(0, "00000000000000000000", blockchain.getDifficulty());

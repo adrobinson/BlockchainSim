@@ -9,8 +9,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-
-import static org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers.data;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class WalletUtil {
 
@@ -30,6 +29,7 @@ public class WalletUtil {
         ObjectMapper mapper = new ObjectMapper();
 
         try{
+            Security.addProvider(new BouncyCastleProvider());
             WalletData walletCopy = mapper.readValue(new File(path), WalletData.class); // pass data into wallet data class
             KeyFactory keyFactory = KeyFactory.getInstance("ECDSA", "BC"); // Same algorithm as wallet constructor
 

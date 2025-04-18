@@ -1,18 +1,18 @@
 {
   "header" : [ {
     "index" : 0,
-    "timestamp" : 1744838399401,
+    "timestamp" : 1744973105261,
     "previousHash" : "00000000000000000000",
-    "hash" : "00000bacee740e750d509a2be0cf3ef36c59a3821274b99ad629e6e562dc5f30",
-    "nonce" : 2295513,
+    "hash" : "000002896332b2ee8391e488b7aa117828495666d8b6c4eed6651c02592125e7",
+    "nonce" : 142072,
     "difficulty" : 5
   } ],
   "data" : [ {
-    "8432db2be73193a48206269a5a19aeebdd85b395d7392556f0bc1acd8788b7f9" : {
-      "timestamp" : 1744838399410,
+    "62e22c737b7021f101b61ca416492f1a92e9d1e5695ac4dbf1ce248d1d27d7b6" : {
+      "timestamp" : 1744973105271,
       "outputs" : [ {
         "value" : 50.0,
-        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEe7OucBNANROx/WLqF0JTJsxycLRexsQypuuVwaPY8Btcfy0Jq7UZxoKA1i1hyTP/36kY73U0a0lTotqp8cQM4g=="
+        "recipient" : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2R2j0xsJAX1AMWwxU5pgYZ1CTrIULImCD8oPO5D0onv1/8SiX0Smu2vYndKHF8HYns3x0fhqUbxBB2SHlHT1cQ=="
       } ]
     }
   } ]
