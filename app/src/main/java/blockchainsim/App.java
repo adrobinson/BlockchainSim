@@ -18,6 +18,7 @@ public class App {
         // ====================== BLOCKCHAIN & GENESIS NODE SETUP =============================
 
         Block genBlock = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000000.json"));
+        Block secondBlock = BlockUtil.readBlock(new File("app/src/main/resources/BlockData/block0000000001.json"));
 
         Blockchain blockchain = Blockchain.getInstance();
 
@@ -27,11 +28,62 @@ public class App {
 
         System.out.println(minerWallet.getPublicAddress() + " " + minerWallet.getPublicKey() + " " + minerWallet.getPrivateKey());
 
+
         Wallet wallet1 = new Wallet();
 
+        // Create the peer network and add nodes
+        PeerNetwork pn = new PeerNetwork();
         Node node = new Node(blockchain);
-        node.buildLocalChainData("app/src/main/resources/BlockData");
-        System.out.println(node.getUtxoPool().entrySet());
+        pn.addNode(node);
+        Node node2 = new Node(blockchain);
+        pn.addNode(node2);
+        Node node3 = new Node(blockchain);
+        pn.addNode(node3);
+        pn.addNode(miner);
+
+        // create a new valid transaction for test
+        PeerTransaction tx = new PeerTransaction((PublicKey) minerWallet.getPublicKey(), (PublicKey) wallet1.getPublicKey(), 5.00);
+        tx.signTransaction(minerWallet.getPrivateKey());
+
+        // verify transaction with nodes
+        if(node.verifyTransaction(tx)){
+            if(pn.broadcastTransaction(node, tx) == 2){
+                System.out.println("all nodes verified");
+                for(Node n: pn.getNodeList()){
+                    System.out.println("Mempool" + n.getMempool());
+                    System.out.println("Utxo:" + n.getUtxoPool());
+                }
+            }
+        }
+
+
+        // create a new block, add a coinbase transaction for the miner and add the peer transaction
+        Block block = new Block(3, secondBlock.getHash(), blockchain.getDifficulty());
+        block.addTransaction(new CoinbaseTransaction((PublicKey) minerWallet.getPublicKey(), blockchain.getRewardLimit()));
+        block.addTransaction(tx);
+        miner.mineBlock(block);
+
+        // check all transaction inputs/outpus are correct after verification
+        System.out.println("Coinbase outputs");
+        System.out.println(block.getData().get(0).getOutputs());
+        System.out.println("Peer outputs/inputs");
+        System.out.println(((PeerTransaction)block.getData().get(1)).getOutputs());
+        System.out.println(((PeerTransaction)block.getData().get(1)).getInputs());
+
+        // verify block
+        if(node.verifyBlock(block)){
+            if(pn.broadcastBlock(node, block) == 2){
+                System.out.println("Block verififed by all nodes");
+                for (Node n: pn.getNodeList()){
+                    // check the new utxo pools of the nodes
+                    System.out.println("Updated Mempool" + n.getMempool());
+                    System.out.println("Updated Utxo:" + n.getUtxoPool());
+
+                }
+            }
+        }
+
+
 
 //        PeerTransaction tx = new PeerTransaction((PublicKey) minerWallet.getPublicKey(), (PublicKey) wallet1.getPublicKey(), 20.0);
 //        tx.signTransaction(minerWallet.getPrivateKey());

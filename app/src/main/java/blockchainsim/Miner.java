@@ -6,8 +6,9 @@ public class Miner extends Node{
         super(blockchain);
     }
 
-    public void mineBlock(Block targetBlock, int difficulty) {
-        String target = "0".repeat(difficulty);
+    public void mineBlock(Block targetBlock) {
+
+        String target = "0".repeat(targetBlock.getDifficulty());
 
         while (!targetBlock.calculateHash().startsWith(target)){
             targetBlock.setNonce(targetBlock.getNonce() + 1);

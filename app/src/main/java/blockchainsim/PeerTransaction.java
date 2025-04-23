@@ -2,10 +2,8 @@ package blockchainsim;
 
 import org.checkerframework.checker.units.qual.A;
 
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -38,18 +36,24 @@ public class PeerTransaction extends Transaction {
         this.signature = dsa.sign();
     }
 
-    public boolean verifySignature() throws Exception{
+    public boolean verifySignature() {
         String data = sender + receiver + amount; // Recreate transaction data
-        Signature dsa = Signature.getInstance("SHA256withECDSA", "BC"); // Initialize ECDSA, same algorithm we signed with
+        try{
+            Signature dsa = Signature.getInstance("SHA256withECDSA", "BC"); // Initialize ECDSA, same algorithm we signed with
 
-        // Convert Base64 public key back to actual PublicKey object
-        PublicKey publicKey = KeyFactory.getInstance("ECDSA")
-                .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(sender)));
+            // Convert Base64 public key back to actual PublicKey object
+            PublicKey publicKey = KeyFactory.getInstance("ECDSA")
+                    .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(sender)));
 
-        dsa.initVerify(publicKey); // Set public key for verification
-        dsa.update(data.getBytes()); // Hash the transaction data
+            dsa.initVerify(publicKey); // Set public key for verification
+            dsa.update(data.getBytes()); // Hash the transaction data
 
-        return dsa.verify(signature); // Check if signature is valid
+            return dsa.verify(signature); // Check if signature is valid
+        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | SignatureException |
+                 NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public String getSender() {return sender;}

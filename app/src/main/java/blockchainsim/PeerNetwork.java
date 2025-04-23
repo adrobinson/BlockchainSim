@@ -58,6 +58,38 @@ public class PeerNetwork {
         }
     }
 
+    public int broadcastBlock(Node originNode, Block block){
+        int accepted = 0;
+        int rejected = 0;
+
+        for(Node node: nodeList) {
+            if(node.getBlockchain() == originNode.getBlockchain()){ // Check nodes are a part of the same blockchain
+                if (node != originNode){
+                    if (!node.verifyBlock(block)){
+                        rejected++;
+                    } else {
+                        accepted++;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Accepted: " + accepted + " Rejected: " + rejected);
+
+        if (accepted == 0){ // If all nodes found the transaction to be invalid, return 0
+            return 0;
+        }
+
+        if (rejected > accepted){ // If majority of nodes reject the transaction, some nodes will need to rectify transaction.
+            return 1;
+        }
+
+        for(Node node: nodeList) {
+            node.addBlock(block);
+        }
+        return 2; // majority/all nodes found transaction to be true
+    }
+
     public ArrayList<Node> getNodeList() {
         return nodeList;
     }

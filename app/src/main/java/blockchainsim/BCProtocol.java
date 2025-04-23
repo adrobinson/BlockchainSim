@@ -26,12 +26,24 @@ public final class BCProtocol {
     public static double verifySenderFunds(Node node, HashMap<Integer, UTXO> utxoPool, PeerTransaction tx){
 
         double senderAmount = 0;
+        boolean addInputs = true;
+
+        if(!tx.getInputs().isEmpty()){
+            addInputs = false;
+        }
 
         for(int index: utxoPool.keySet()){
             if(!utxoPool.get(index).isPending()) { // If utxo is pending, it cannot be used
                 if (Objects.equals(utxoPool.get(index).getAddress(), tx.getSender())) { // Look through utxoPool to find unspent currency for sender
 
-                    tx.addInput(utxoPool.get(index).getTransactionID(), index);
+                    if (addInputs) {
+                        tx.addInput(utxoPool.get(index).getTransactionID(), index);
+                    } else {
+                        if(!tx.getInputs().contains(utxoPool.get(index).getTransactionID()) && tx.getInputs().contains(index)) {
+                            System.out.println("Inconsistent inputs"); // TODO handle
+                        }
+                    }
+
                     senderAmount += utxoPool.get(index).getAmount();
 
                     if (senderAmount >= tx.getAmount()) { // if sender has enough to complete transaction
